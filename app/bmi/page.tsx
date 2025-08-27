@@ -14,7 +14,7 @@ export default function page() {
 
         {/* BMI Image */}
         <div className="flex justify-center mb-8">
-          <Image src={BMIgit push -u origin main} alt="bmi" width={100} height={100} className="mx-auto mb-4"></Image>
+          <Image src={BMI} alt="bmi" width={100} height={100} className="mx-auto mb-4"></Image>
         </div>
 
         {/* Input Fields */}
