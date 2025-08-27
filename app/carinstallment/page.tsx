@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
+import Car from "/public/car.png";
 export default function page() {
   return (
     <div className="bg-gradient-to-br from-gray-900 to-red-600 min-h-screen flex items-center justify-center p-4">
@@ -15,7 +16,7 @@ export default function page() {
 
         {/* Car Image */}
         <div className="flex justify-center mb-8">
-          <Image src="./../images/car.png" alt="car" width={100} height={100} className="mx-auto mb-4"></Image>
+          <Image src={Car} alt="car" width={100} height={100} className="mx-auto mb-4"></Image>
         </div>
 
         {/* Input Fields */}

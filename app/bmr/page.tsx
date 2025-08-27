@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
+import BMR from "/public/bmr.png";
 export default function page() {
   return (
     <div className="bg-gradient-to-br from-gray-900 to-red-600 min-h-screen flex items-center justify-center p-4">
@@ -13,7 +14,7 @@ export default function page() {
 
         {/* BMR Image */}
         <div className="flex justify-center mb-8">
-          <Image src="./../images/bmr.png" alt="bmr" width={100} height={100} className="mx-auto mb-4"></Image>
+          <Image src={BMR} alt="bmr" width={100} height={100} className="mx-auto mb-4"></Image>
         </div>
 
         {/* Input Fields */}
