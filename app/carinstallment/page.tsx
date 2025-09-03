@@ -2,7 +2,38 @@
 import Image from "next/image";
 import React from "react";
 import Car from "/public/car.png";
-export default function page() {
+import { useState } from "react";
+export default function Page() {
+  const [userName, setUserName] = useState('');
+  const [carPrice, setCarPrice] = useState('');
+  const [interestRate, setInterestRate] = useState('');
+  const [downPayment, setDownPayment] = useState('');
+  const [loanTerm, setLoanTerm] = useState('');
+  const [installment, setInstallment] = useState('0.00');
+
+  const handleCarInstallmentClick = () => {
+    if (!userName || !carPrice || !interestRate ||
+      parseFloat(carPrice) <= 0 || parseFloat(interestRate) <= 0) {
+      alert('กรุณาป้อนข้อมูลให้ถูกต้อง');
+      return;
+    }
+    const downPaymentAmount = (parseFloat(downPayment) * parseFloat(carPrice)) / 100;
+    const loanAmount = parseFloat(carPrice) - downPaymentAmount;
+    const monthlyInterestRate = (parseFloat(interestRate) / 12) / 100;
+    const numberOfPayments = parseInt(loanTerm) * 12;
+    const monthlyInstallment = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) / (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+    setInstallment(monthlyInstallment.toFixed(2));
+  }
+
+  const handleResetClick = () => {
+    setUserName('');
+    setCarPrice('');
+    setInterestRate('');
+    setDownPayment('');
+    setLoanTerm('');
+    setInstallment('0.00');
+  };
+  
   return (
     <div className="bg-gradient-to-br from-gray-900 to-red-600 min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-200">
@@ -32,7 +63,7 @@ export default function page() {
               type="text"
               id="name"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3 border"
-            />
+              value={userName} onChange={(e) => setUserName(e.target.value)}/>
           </div>
 
           <div>
@@ -46,7 +77,7 @@ export default function page() {
               type="number"
               id="carPrice"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3 border"
-            />
+              value={carPrice} onChange={(e) => setCarPrice(e.target.value)}/>
           </div>
 
           <div>
@@ -60,7 +91,7 @@ export default function page() {
               type="number"
               id="interestRate"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3 border"
-            />
+              value={interestRate} onChange={(e) => setInterestRate(e.target.value)}/>
           </div>
 
           {/* Down Payment Selection */}
@@ -75,7 +106,8 @@ export default function page() {
                     id={`down-payment-${percent}`}
                     name="downPayment"
                     type="radio"
-                    defaultChecked={percent === 15}
+                    checked={percent === parseInt(downPayment)}
+                    onChange={() => setDownPayment(percent.toString())}
                     className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300"
                   />
                   <label
@@ -100,12 +132,13 @@ export default function page() {
             <select
               id="loanTerm"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3 border"
+              value={loanTerm}
+              onChange={(e) => setLoanTerm(e.target.value)}
             >
               {[24, 36, 48, 60, 72].map((months, index) => (
                 <option
                   key={index}
                   value={months}
-                  defaultChecked={months === 24}
                 >
                   {months} เดือน
                 </option>
@@ -116,10 +149,12 @@ export default function page() {
 
         {/* Buttons */}
         <div className="mt-8 space-x-4 flex justify-center">
-          <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-colors duration-200">
+          <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-colors duration-200"
+          onClick={handleCarInstallmentClick}>
             คำนวณ
           </button>
-          <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-full shadow-lg transition-colors duration-200">
+          <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-full shadow-lg transition-colors duration-200"
+          onClick={handleResetClick}>
             ล้างข้อมูล
           </button>
         </div>
@@ -129,7 +164,7 @@ export default function page() {
           <p className="text-lg font-bold text-gray-700">
             ผ่อนชำระต่อเดือน:{" "}
             <span id="installment-value" className="text-red-600">
-              0.00
+              {installment}
             </span>{" "}
             บาท
           </p>

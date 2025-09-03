@@ -2,7 +2,37 @@
 import Image from "next/image";
 import React from "react";
 import BMR from "/public/bmr.png";
-export default function page() {
+import { useState } from "react";
+export default function Page() {
+  
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [bmrresult, setBmrresult] = useState('0.00');
+
+  const handleBmrClick = () => {
+    if (!weight || !height || !age || parseFloat(weight) <= 0 || parseFloat(height) <= 0 || parseInt(age) <= 0) {
+      alert('กรุณาป้อนข้อมูลให้ถูกต้อง');
+      return;
+    }
+    if (gender == 'male') {
+      const bmr = 66.5 + (13.75 * parseFloat(weight)) + (5.003 * parseFloat(height)) - (6.75 * parseInt(age));
+      setBmrresult(bmr.toFixed(2));
+    } else{
+      const bmr = 655.1 + (9.563 * parseFloat(weight)) + (1.850 * parseFloat(height)) - (4.67 * parseInt(age));
+      setBmrresult(bmr.toFixed(2));
+    }
+  }
+
+  const handleResetClick = () => {
+    setWeight('');
+    setHeight('');
+    setAge('');
+    setGender('');
+    setBmrresult('0.00');
+  };
+
   return (
     <div className="bg-gradient-to-br from-gray-900 to-red-600 min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-200">
@@ -30,7 +60,8 @@ export default function page() {
               type="number"
               id="weight"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
-            focus:border-red-500 focus:ring-red-500 p-3 border"
+            focus:border-red-500 focus:ring-red-500 p-3 border" 
+              value={weight} onChange={(e) => setWeight(e.target.value)}
             />
           </div>
           <div>
@@ -45,6 +76,7 @@ export default function page() {
               id="height"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 
               focus:ring-red-500 p-3 border"
+              value={height} onChange={(e) => setHeight(e.target.value)}
             />
           </div>
           <div>
@@ -59,6 +91,7 @@ export default function page() {
               id="age"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
             focus:border-red-500 focus:ring-red-500 p-3 border"
+              value={age} onChange={(e) => setAge(e.target.value)}
             />
           </div>
           {/* Gender Selection */}
@@ -73,7 +106,9 @@ export default function page() {
                   name="gender"
                   type="radio"
                   className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300"
-                  defaultChecked
+                  value="male"
+                  checked = {gender == "male"}
+                  onChange={(e) => setGender(e.target.value)}
                 />
                 <label
                   htmlFor="gender-male"
@@ -88,6 +123,9 @@ export default function page() {
                   name="gender"
                   type="radio"
                   className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300"
+                  value="female"
+                  checked = {gender == "female"}
+                  onChange={(e) => setGender(e.target.value)}
                 />
                 <label
                   htmlFor="gender-female"
@@ -102,10 +140,12 @@ export default function page() {
 
         {/* Buttons */}
         <div className="mt-8 space-x-4 flex justify-center">
-          <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-colors duration-200">
+          <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-colors duration-200"
+          onClick={handleBmrClick}>
             คำนวณ BMR
           </button>
-          <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-full shadow-lg transition-colors duration-200">
+          <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-full shadow-lg transition-colors duration-200"
+          onClick={handleResetClick}>
             รีเซ็ต
           </button>
         </div>
@@ -115,7 +155,7 @@ export default function page() {
           <p className="text-lg font-bold text-gray-700">
             ค่า BMR ที่คำนวณได้:{" "}
             <span id="bmr-value" className="text-red-600">
-              0.00
+              {bmrresult}
             </span>
           </p>
         </div>
